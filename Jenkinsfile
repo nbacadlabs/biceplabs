@@ -16,7 +16,7 @@ pipeline {
             }
             steps {
                 sh '''
-                   cat README.md
+                   cat 'README.md'
                    '''
             }
         }
@@ -25,8 +25,8 @@ pipeline {
                 branch 'PR-*'
             }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'bicepconnect', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
-                    sh 'sh deploy.sh'
+               withCredentials([azureServicePrincipal('bicepconnect')]) {
+                sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
                 }
             }
         }
