@@ -100,3 +100,50 @@ Output Json
     }
   ]
 }
+
+
+CopyText example
+-----------------
+
+<template>
+  <div>
+    <h2>Block Codes</h2>
+    <ul>
+      <li v-for="(block, index) in blockcodes" :key="index">
+        <span>{{ block.blockcodeid }} - {{ block.blockcodefulltext }}</span>
+        <button @click="copyToClipboard(block.blockcodeid)">Copy</button>
+      </li>
+    </ul>
+    <p v-if="copiedText">✅ Copied: {{ copiedText }}</p>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const blockcodes = ref([
+  { blockcodeid: 'B001', blockcodefulltext: 'Introduction to the topic.' },
+  { blockcodeid: 'B002', blockcodefulltext: 'Background and context.' },
+  { blockcodeid: 'B003', blockcodefulltext: 'Main argument and evidence.' }
+])
+
+const copiedText = ref('')
+
+const copyToClipboard = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text)
+    copiedText.value = text
+    setTimeout(() => copiedText.value = '', 2000)
+  } catch (err) {
+    console.error('Failed to copy: ', err)
+  }
+}
+</script>
+
+<style scoped>
+button {
+  margin-left: 10px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+</style>
